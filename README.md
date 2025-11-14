@@ -139,30 +139,45 @@ make pull-deepseek   # DeepSeek Coder
 - **Velocidad:** `llama3.2:3b`, `phi3:mini`
 - **Calidad/Tamaño:** `gpt-oss:20b`, `llama3.1:13b`
 
-## Configuración Alternativa
+## Proveedores Disponibles
 
-### Usar OpenAI
+### Ollama (local, gratis)
+
+```bash
+# .env
+MODEL_PROVIDER=ollama
+OLLAMA_MODEL=mistral
+```
+
+### LM Studio (local, gratis)
+
+1. Descargar e instalar LM Studio: https://lmstudio.ai/
+2. Cargar un modelo en LM Studio
+3. Iniciar servidor en pestaña "Local Server"
+4. Configurar `.env`:
+   ```bash
+   MODEL_PROVIDER=lmstudio
+   LMSTUDIO_MODEL=mistral-7b-instruct
+   ```
+
+### OpenAI (remoto, pago)
 
 1. Obtener API key en https://platform.openai.com/api-keys
-2. Añadir en `.env`:
-   ```
+2. Configurar `.env`:
+   ```bash
+   MODEL_PROVIDER=openai
    OPENAI_API_KEY=tu-api-key
-   ```
-3. Cambiar en `main.py`:
-   ```python
-   MODEL_TYPE = "openai"
+   OPENAI_MODEL=gpt-4o-mini
    ```
 
-### Usar Anthropic
+### Anthropic (remoto, pago)
 
 1. Obtener API key en https://console.anthropic.com/
-2. Añadir en `.env`:
-   ```
+2. Configurar `.env`:
+   ```bash
+   MODEL_PROVIDER=anthropic
    ANTHROPIC_API_KEY=tu-api-key
-   ```
-3. Cambiar en `main.py`:
-   ```python
-   MODEL_TYPE = "anthropic"
+   ANTHROPIC_MODEL=claude-3-5-sonnet-20241022
    ```
 
 ## Estructura
