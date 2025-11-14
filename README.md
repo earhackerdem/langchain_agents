@@ -141,7 +141,7 @@ make pull-deepseek   # DeepSeek Coder
 
 ## Proveedores Disponibles
 
-### Ollama (local, gratis)
+### Ollama (local)
 
 ```bash
 # .env
@@ -149,7 +149,7 @@ MODEL_PROVIDER=ollama
 OLLAMA_MODEL=mistral
 ```
 
-### LM Studio (local, gratis)
+### LM Studio (local)
 
 1. Descargar e instalar LM Studio: https://lmstudio.ai/
 2. Cargar un modelo en LM Studio
@@ -160,7 +160,7 @@ OLLAMA_MODEL=mistral
    LMSTUDIO_MODEL=mistral-7b-instruct
    ```
 
-### OpenAI (remoto, pago)
+### OpenAI (remoto)
 
 1. Obtener API key en https://platform.openai.com/api-keys
 2. Configurar `.env`:
@@ -170,7 +170,7 @@ OLLAMA_MODEL=mistral
    OPENAI_MODEL=gpt-4o-mini
    ```
 
-### Anthropic (remoto, pago)
+### Anthropic (remoto)
 
 1. Obtener API key en https://console.anthropic.com/
 2. Configurar `.env`:

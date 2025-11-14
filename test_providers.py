@@ -25,14 +25,14 @@ def test_provider_selection():
         print(f"🦙 Ollama")
         print(f"   Modelo: {model}")
         print(f"   URL: http://localhost:11434")
-        print(f"   Estado: Local, gratis")
+        print(f"   Tipo: Local")
         
     elif provider == "lmstudio":
         model = os.getenv("LMSTUDIO_MODEL", "local-model")
         print(f"🖥️  LM Studio")
         print(f"   Modelo: {model}")
         print(f"   URL: http://localhost:1234/v1")
-        print(f"   Estado: Local, gratis")
+        print(f"   Tipo: Local")
         
     elif provider == "openai":
         api_key = os.getenv("OPENAI_API_KEY", "NO_CONFIGURADO")
@@ -40,7 +40,7 @@ def test_provider_selection():
         print(f"🔑 OpenAI")
         print(f"   Modelo: {model}")
         print(f"   API Key: {'✅ Configurado' if api_key != 'NO_CONFIGURADO' else '❌ No configurado'}")
-        print(f"   Estado: Remoto, pago")
+        print(f"   Tipo: Remoto")
         
     elif provider == "anthropic":
         api_key = os.getenv("ANTHROPIC_API_KEY", "NO_CONFIGURADO")
@@ -48,7 +48,7 @@ def test_provider_selection():
         print(f"🔑 Anthropic")
         print(f"   Modelo: {model}")
         print(f"   API Key: {'✅ Configurado' if api_key != 'NO_CONFIGURADO' else '❌ No configurado'}")
-        print(f"   Estado: Remoto, pago")
+        print(f"   Tipo: Remoto")
     
     print()
     print("=" * 60)
