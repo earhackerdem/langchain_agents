@@ -7,42 +7,67 @@ Agente de IA usando LangChain con soporte para Ollama, OpenAI y Anthropic.
 - Python 3.12+
 - Ollama (para modelos locales)
 
-## Instalación
+## Instalación Rápida
 
-### 1. Instalar Ollama
+### Opción 1: Setup automático (recomendado)
+
+```bash
+make setup
+make pull-model
+make run
+```
+
+### Opción 2: Setup con direnv (auto-activación)
+
+```bash
+make setup
+make install-direnv
+make setup-direnv
+make pull-model
+make run
+```
+
+### Opción 3: Manual
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
-```
-
-### 2. Descargar un modelo
-
-```bash
 ollama pull mistral
-```
-
-Consulta la [guía de modelos](#guía-de-modelos-por-hardware) para elegir el mejor según tu hardware.
-
-### 3. Configurar el proyecto
-
-```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-```
-
-Editar `.env` con el modelo elegido:
-
-```bash
-OLLAMA_MODEL=mistral
-```
-
-## Uso
-
-```bash
-source .venv/bin/activate
 python main.py
+```
+
+## Comandos Makefile
+
+| Comando | Descripción |
+|---------|-------------|
+| `make help` | Mostrar todos los comandos disponibles |
+| `make setup` | Configurar proyecto completo (venv + deps + .env) |
+| `make run` | Ejecutar el agente |
+| `make test` | Probar conexión con Ollama |
+| `make pull-model` | Descargar modelo configurado en .env |
+| `make list-models` | Listar modelos instalados |
+| `make shell` | Abrir shell con venv activado |
+| `make clean` | Limpiar archivos temporales |
+| `make reset` | Reset completo (eliminar venv y reinstalar) |
+
+### Comandos direnv
+
+| Comando | Descripción |
+|---------|-------------|
+| `make install-direnv` | Instalar direnv en el sistema |
+| `make setup-direnv` | Configurar direnv para este proyecto |
+| `make check-direnv` | Verificar configuración de direnv |
+
+### Descargar modelos específicos
+
+```bash
+make pull-mistral    # Mistral 7B
+make pull-llama      # Llama 3.1 8B
+make pull-qwen       # Qwen 2.5 14B
+make pull-deepseek   # DeepSeek Coder
 ```
 
 ## Guía de Modelos por Hardware
@@ -137,6 +162,9 @@ my_course_agent/
 ├── main.py              # Código principal
 ├── test_ollama.py       # Script de pruebas
 ├── requirements.txt     # Dependencias
+├── Makefile             # Comandos de automatización
 ├── .env                 # Configuración
+├── .env.example         # Plantilla de configuración
+├── .envrc               # direnv config (auto-generado)
 └── README.md           # Documentación
 ```
