@@ -52,8 +52,8 @@ python main.py
 | GPU | VRAM | Modelo Inicial | Modelo Avanzado | Modelo Premium |
 |-----|------|----------------|-----------------|----------------|
 | RTX 4060 | 8GB | `mistral:7b` | `llama3.1:8b` | - |
-| RTX 4070 | 12GB | `mistral:7b` | `qwen2.5:14b` | `llama3.1:13b` |
-| RTX 4080/5080 | 16GB | `qwen2.5:14b` | `llama3.1:13b` | `mixtral:8x7b-q4` |
+| RTX 4070 | 12GB | `mistral:7b` | `qwen2.5:14b` | `gpt-oss:20b` |
+| RTX 4080/5080 | 16GB | `gpt-oss:20b` | `llama3.1:13b` | `codellama:34b` |
 | RTX 4090 | 24GB | `mixtral:8x7b` | `llama3.1:70b-q4` | `qwen2.5:32b` |
 
 ### Apple Silicon
@@ -72,19 +72,37 @@ python main.py
 | Modelo | Parámetros | VRAM | Velocidad | Calidad | Mejor para |
 |--------|-----------|------|-----------|---------|------------|
 | `llama3.2:3b` | 3B | ~2GB | ⚡⚡⚡⚡⚡ | ⭐⭐⭐ | Pruebas rápidas |
+| `phi3:mini` | 3.8B | ~2.3GB | ⚡⚡⚡⚡⚡ | ⭐⭐⭐⭐ | Eficiencia |
 | `mistral:7b` | 7B | ~4GB | ⚡⚡⚡⚡ | ⭐⭐⭐⭐ | Uso general |
+| `gemma:7b` | 7B | ~5GB | ⚡⚡⚡⚡ | ⭐⭐⭐⭐ | Google optimizado |
 | `llama3.1:8b` | 8B | ~5GB | ⚡⚡⚡⚡ | ⭐⭐⭐⭐ | Desarrollo |
-| `qwen2.5:14b` | 14B | ~9GB | ⚡⚡⚡ | ⭐⭐⭐⭐⭐ | Calidad profesional |
+| `neural-chat:7b` | 7B | ~4.1GB | ⚡⚡⚡⚡ | ⭐⭐⭐⭐ | Conversación |
 | `llama3.1:13b` | 13B | ~8GB | ⚡⚡⚡ | ⭐⭐⭐⭐⭐ | Balance óptimo |
+| `phi3:medium` | 14B | ~9GB | ⚡⚡⚡ | ⭐⭐⭐⭐⭐ | Microsoft potente |
+| `qwen2.5:14b` | 14B | ~9GB | ⚡⚡⚡ | ⭐⭐⭐⭐⭐ | Calidad profesional |
+| `gpt-oss:20b` | 20.9B | ~13GB | ⚡⚡⚡ | ⭐⭐⭐⭐⭐ | Alto rendimiento |
+| `codellama:34b` | 34B | ~20GB | ⚡⚡ | ⭐⭐⭐⭐⭐ | Código avanzado |
 | `mixtral:8x7b` | 47B | ~26GB | ⚡⚡ | ⭐⭐⭐⭐⭐ | Máxima calidad |
-| `deepseek-coder:6.7b` | 6.7B | ~4GB | ⚡⚡⚡⚡ | ⭐⭐⭐⭐ | Programación |
+| `llama3.1:70b-q4` | 70B | ~40GB | ⚡ | ⭐⭐⭐⭐⭐ | Modelos gigantes |
 
-### Modelos por Especialidad
+### Modelos Especializados
 
-- **Español:** `mistral:7b`
-- **Programación:** `deepseek-coder:6.7b`, `codellama:13b`
-- **Razonamiento:** `qwen2.5:14b`, `llama3.1:13b`
+| Modelo | Parámetros | VRAM | Especialidad |
+|--------|-----------|------|--------------|
+| `deepseek-coder:6.7b` | 6.7B | ~4GB | Programación general |
+| `codellama:13b` | 13B | ~8GB | Código Python/C++ |
+| `granite-code:8b` | 8B | ~5GB | Código empresarial |
+| `starcoder2:15b` | 15B | ~9GB | Múltiples lenguajes |
+| `deepseek-r1:7b` | 7B | ~4.5GB | Razonamiento avanzado |
+
+### Recomendaciones por Uso
+
+- **Español:** `mistral:7b`, `qwen2.5:14b`
+- **Programación:** `deepseek-coder:6.7b`, `codellama:13b`, `starcoder2:15b`
+- **Razonamiento:** `qwen2.5:14b`, `deepseek-r1:7b`, `gpt-oss:20b`
+- **Conversación:** `neural-chat:7b`, `llama3.1:8b`
 - **Velocidad:** `llama3.2:3b`, `phi3:mini`
+- **Calidad/Tamaño:** `gpt-oss:20b`, `llama3.1:13b`
 
 ## Configuración Alternativa
 
