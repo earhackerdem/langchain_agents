@@ -7,6 +7,15 @@ Agente de IA usando LangChain con soporte para Ollama, OpenAI y Anthropic.
 - Python 3.12+
 - Ollama (para modelos locales)
 
+## Compatibilidad
+
+Este proyecto es compatible con:
+- ✅ **WSL2** (Windows 11)
+- ✅ **Linux** (Ubuntu, Debian, Fedora, Arch)
+- ✅ **macOS** (Intel y Apple Silicon)
+
+El Makefile detecta automáticamente tu sistema operativo y ajusta los comandos según corresponda.
+
 ## Instalación Rápida
 
 ### Opción 1: Setup automático (recomendado)
@@ -44,6 +53,7 @@ python main.py
 | Comando | Descripción |
 |---------|-------------|
 | `make help` | Mostrar todos los comandos disponibles |
+| `make info` | Mostrar información del sistema (OS, Python, shell) |
 | `make setup` | Configurar proyecto completo (venv + deps + .env) |
 | `make run` | Ejecutar el agente |
 | `make test` | Probar conexión con Ollama |

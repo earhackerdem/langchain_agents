@@ -1,13 +1,45 @@
-.PHONY: help setup install run test clean pull-model check-ollama install-ollama list-models shell reset freeze upgrade dev setup-direnv install-direnv check-direnv
+.PHONY: help info setup install run test clean pull-model check-ollama install-ollama list-models shell reset freeze upgrade dev setup-direnv install-direnv check-direnv
 
+UNAME_S := $(shell uname -s)
 PYTHON := python3
 VENV := .venv
 BIN := $(VENV)/bin
 OLLAMA_MODEL := $(shell grep OLLAMA_MODEL .env 2>/dev/null | cut -d '=' -f2 || echo "mistral")
+IS_WSL := $(shell uname -r | grep -i microsoft >/dev/null 2>&1 && echo "true" || echo "false")
+SHELL_RC := $(shell if [ -f ~/.zshrc ]; then echo ~/.zshrc; else echo ~/.bashrc; fi)
 
 help:
 	@echo "Comandos disponibles:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+info: ## Mostrar información del sistema
+	@echo "📊 Información del sistema:"
+	@echo "   OS: $(UNAME_S)"
+	@if [ "$(IS_WSL)" = "true" ]; then \
+		echo "   Entorno: WSL2 (Windows Subsystem for Linux)"; \
+	elif [ "$(UNAME_S)" = "Darwin" ]; then \
+		echo "   Entorno: macOS"; \
+		if [ "$$(uname -m)" = "arm64" ]; then \
+			echo "   Arquitectura: Apple Silicon (ARM64)"; \
+		else \
+			echo "   Arquitectura: Intel (x86_64)"; \
+		fi; \
+	else \
+		echo "   Entorno: Linux nativo"; \
+	fi
+	@echo "   Python: $$($(PYTHON) --version 2>&1)"
+	@echo "   Shell: $$SHELL"
+	@echo "   Shell RC: $(SHELL_RC)"
+	@if command -v ollama >/dev/null 2>&1; then \
+		echo "   Ollama: ✅ Instalado"; \
+	else \
+		echo "   Ollama: ❌ No instalado"; \
+	fi
+	@if command -v direnv >/dev/null 2>&1; then \
+		echo "   direnv: ✅ Instalado"; \
+	else \
+		echo "   direnv: ❌ No instalado"; \
+	fi
 
 setup: ## Configurar proyecto completo desde cero
 	@echo "🚀 =================================="
@@ -99,8 +131,26 @@ check-ollama: ## Verificar Ollama
 
 install-ollama: ## Instalar Ollama
 	@echo "📥 Instalando Ollama..."
-	curl -fsSL https://ollama.com/install.sh | sh
-	@echo "✅ Ollama instalado"
+	@if [ "$(IS_WSL)" = "true" ]; then \
+		echo "⚠️  WSL2 detectado"; \
+		echo ""; \
+		echo "Tienes dos opciones:"; \
+		echo "  1. Instalar Ollama en WSL2 (recomendado para desarrollo):"; \
+		echo "     curl -fsSL https://ollama.com/install.sh | sh"; \
+		echo ""; \
+		echo "  2. Usar Ollama desde Windows (si ya lo tienes instalado):"; \
+		echo "     - Ollama en Windows debería ser accesible desde WSL2"; \
+		echo "     - Verifica con: make check-ollama"; \
+		echo ""; \
+		read -p "¿Instalar en WSL2? (y/n): " confirm && [ "$$confirm" = "y" ] && curl -fsSL https://ollama.com/install.sh | sh || echo "Instalación cancelada"; \
+	elif [ "$(UNAME_S)" = "Darwin" ]; then \
+		echo "🍎 macOS detectado"; \
+		echo "Descarga e instala desde: https://ollama.com/download/mac"; \
+		echo "O usa Homebrew: brew install ollama"; \
+	else \
+		curl -fsSL https://ollama.com/install.sh | sh; \
+	fi
+	@echo "✅ Proceso completado"
 
 pull-model: ## Descargar modelo configurado en .env
 	@echo "📥 Descargando modelo: $(OLLAMA_MODEL)"
@@ -125,7 +175,11 @@ pull-deepseek: ## Descargar DeepSeek Coder
 shell: ## Abrir shell con venv activado
 	@echo "🐚 Abriendo shell con venv activado..."
 	@$(BIN)/python -c "import sys; print(f'Python: {sys.version}')"
-	@bash --init-file <(echo ". $(HOME)/.bashrc; source $(BIN)/activate; PS1='(venv) \u@\h:\w\$$ '")
+	@if [ -n "$$ZSH_VERSION" ] || [ "$$SHELL" = "/bin/zsh" ] || [ "$$SHELL" = "/usr/bin/zsh" ]; then \
+		zsh -c "source $(BIN)/activate && PS1='(venv) %n@%m:%~%% ' exec zsh"; \
+	else \
+		bash --init-file <(echo "if [ -f $(SHELL_RC) ]; then source $(SHELL_RC); fi; source $(BIN)/activate; PS1='(venv) \u@\h:\w\$$ '"); \
+	fi
 
 clean: ## Limpiar archivos temporales
 	@echo "🧹 Limpiando archivos temporales..."
@@ -175,23 +229,47 @@ setup-direnv: ## Configurar direnv para auto-activar venv
 	@echo "🎉 Configuración completa!"
 	@echo ""
 	@echo "⚠️  IMPORTANTE: Configura tu shell (si no lo has hecho):"
-	@echo "   bash:  echo 'eval \"\$$(direnv hook bash)\"' >> ~/.bashrc && source ~/.bashrc"
-	@echo "   zsh:   echo 'eval \"\$$(direnv hook zsh)\"' >> ~/.zshrc && source ~/.zshrc"
+	@if [ -f ~/.zshrc ]; then \
+		echo "   Detectado zsh: echo 'eval \"\$$(direnv hook zsh)\"' >> ~/.zshrc && source ~/.zshrc"; \
+	else \
+		echo "   Detectado bash: echo 'eval \"\$$(direnv hook bash)\"' >> ~/.bashrc && source ~/.bashrc"; \
+	fi
+	@if [ "$(UNAME_S)" = "Darwin" ]; then \
+		echo ""; \
+		echo "   En macOS también añade a ~/.zprofile si usas zsh por defecto"; \
+	fi
 	@echo ""
 	@echo "Después de configurar tu shell, al entrar a este directorio"
 	@echo "el venv se activará automáticamente ✨"
 
 install-direnv: ## Instalar direnv en el sistema
 	@echo "📥 Instalando direnv..."
-	@if command -v apt-get >/dev/null 2>&1; then \
-		echo "Detectado: Ubuntu/Debian"; \
+	@if [ "$(IS_WSL)" = "true" ]; then \
+		echo "🐧 WSL2 detectado"; \
+		if command -v apt-get >/dev/null 2>&1; then \
+			sudo apt-get update && sudo apt-get install -y direnv; \
+		else \
+			echo "❌ apt-get no encontrado en WSL2"; \
+			exit 1; \
+		fi; \
+	elif [ "$(UNAME_S)" = "Darwin" ]; then \
+		echo "🍎 macOS detectado"; \
+		if command -v brew >/dev/null 2>&1; then \
+			brew install direnv; \
+		else \
+			echo "❌ Homebrew no encontrado"; \
+			echo "Instala Homebrew: https://brew.sh"; \
+			exit 1; \
+		fi; \
+	elif command -v apt-get >/dev/null 2>&1; then \
+		echo "🐧 Ubuntu/Debian detectado"; \
 		sudo apt-get update && sudo apt-get install -y direnv; \
-	elif command -v brew >/dev/null 2>&1; then \
-		echo "Detectado: macOS (Homebrew)"; \
-		brew install direnv; \
 	elif command -v dnf >/dev/null 2>&1; then \
-		echo "Detectado: Fedora/RHEL"; \
+		echo "🐧 Fedora/RHEL detectado"; \
 		sudo dnf install -y direnv; \
+	elif command -v pacman >/dev/null 2>&1; then \
+		echo "🐧 Arch Linux detectado"; \
+		sudo pacman -S --noconfirm direnv; \
 	else \
 		echo "❌ No se pudo detectar el gestor de paquetes"; \
 		echo "Instala direnv manualmente: https://direnv.net/docs/installation.html"; \
